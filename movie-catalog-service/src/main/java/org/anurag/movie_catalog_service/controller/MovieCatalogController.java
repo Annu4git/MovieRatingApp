@@ -39,14 +39,16 @@ public class MovieCatalogController {
 
         // 1. Hard coding step 1
 
-        UserRatings userRatings = restTemplate.getForObject("http://localhost:8083/ratingsdata/" + userId,
+        // UserRatings userRatings = restTemplate.getForObject("http://localhost:8083/ratingsdata/" + userId,
+        UserRatings userRatings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/" + userId,
                 UserRatings.class);
 
         // 2.
         System.out.println("calling movie info service asynchronously");
 
         return userRatings.getRatings().stream().map(rating -> {
-            Movie movie = restTemplate.getForObject("http://localhost:8082/movies/"
+            // Movie movie = restTemplate.getForObject("http://localhost:8082/movies/"
+            Movie movie = restTemplate.getForObject("http://movie-info-service/movies/"
                     + rating.getMovieId(), Movie.class);
             return new CatalogItem(movie.getMovieName(), movie.getMovieDescription(), rating.getRating());
         }).collect(Collectors.toList());
