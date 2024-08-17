@@ -3,6 +3,7 @@ package org.anurag.movie_catalog_service.controller;
 import org.anurag.movie_catalog_service.models.CatalogItem;
 import org.anurag.movie_catalog_service.models.Movie;
 import org.anurag.movie_catalog_service.models.Rating;
+import org.anurag.movie_catalog_service.models.UserRatings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,37 +39,15 @@ public class MovieCatalogController {
 
         // 1. Hard coding step 1
 
-        List<Rating> ratings = Arrays.asList(
-                new Rating(1011, 9),
-                new Rating(1031, 7),
-                new Rating(1012, 8)
-        );
+        UserRatings userRatings = restTemplate.getForObject("http://localhost:8083/ratingsdata/" + userId,
+                UserRatings.class);
 
         // 2.
         System.out.println("calling movie info service asynchronously");
 
-        /*return ratings.stream().map(rating -> {
+        return userRatings.getRatings().stream().map(rating -> {
             Movie movie = restTemplate.getForObject("http://localhost:8082/movies/"
                     + rating.getMovieId(), Movie.class);
-            return new CatalogItem(movie.getMovieName(), movie.getMovieDescription(), rating.getRating());
-        }).collect(Collectors.toList());*/
-
-        return ratings.stream().map(rating -> {
-
-            Movie movie = webClientBuilder.build()
-                    .get()
-                    .uri("http://localhost:8082/movies/" + rating.getMovieId())
-                    .retrieve()
-                    .bodyToMono(Movie.class)
-                    .block();
-
-            // mono represents single or empty object
-            // it is kind of giving an empty container
-            // and promising that something will come in this container
-            // block() is blocking the call until we get the result in the container
-            // so we are implementing synchronous programming using asynchronous programming construct
-
-            System.out.println("now preparing the response");
             return new CatalogItem(movie.getMovieName(), movie.getMovieDescription(), rating.getRating());
         }).collect(Collectors.toList());
     }
