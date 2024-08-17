@@ -3,6 +3,7 @@ package org.anurag.movie_catalog_service.controller;
 import org.anurag.movie_catalog_service.models.CatalogItem;
 import org.anurag.movie_catalog_service.models.Movie;
 import org.anurag.movie_catalog_service.models.Rating;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/catalog")
 public class MovieCatalogController {
 
+    @Autowired
+    RestTemplate restTemplate;
+
     // Input :  We will get user id as input
     // 1. first we will fetch all the rated movies of this user from Ratings Data Service
     // 2. then we will fetch movie info of every movie from MovieInfoService
@@ -31,13 +35,11 @@ public class MovieCatalogController {
 
         List<Rating> ratings = Arrays.asList(
                 new Rating(1011, 9),
+                new Rating(1031, 7),
                 new Rating(1012, 8)
         );
 
         // 2.
-
-        RestTemplate restTemplate = new RestTemplate();
-
         return ratings.stream().map(rating -> {
             Movie movie = restTemplate.getForObject("http://localhost:8082/movies/"
                     + rating.getMovieId(), Movie.class);
