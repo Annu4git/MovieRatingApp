@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MoviesController {
 
     @GetMapping("/{movieId}")
-    public Movie getMovieInfo(@PathVariable int movieId) {
+    public Movie getMovieInfo(@PathVariable int movieId) throws InterruptedException {
+        Thread.sleep(3000);
         return new Movie(movieId, "Titanic", "A movie starring Leonardo DiCaprio and Kate Winslet");
     }
 }
