@@ -30,6 +30,7 @@ public class MoviesController {
 
     @GetMapping("/{movieId}")
     public Movie getMovieInfo(@PathVariable int movieId) throws InterruptedException {
+        Thread.sleep(3000);
         MovieSummary movieSummary = restTemplate.getForObject("https://api.themoviedb.org/3/movie/"
                 + movieId
                 + "?api_key=cea3b7a0b210db1ea9f3707365849dd8", MovieSummary.class);
