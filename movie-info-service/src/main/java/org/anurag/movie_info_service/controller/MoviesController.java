@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -21,6 +22,9 @@ public class MoviesController {
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    RestClient restClient;
+
     MoviesController() {
         /*movieMap.put(501, new Movie(501, "Titanic", "A movie starring Leonardo DiCaprio and Kate Winslet"));
         movieMap.put(502, new Movie(502, "DDLJ", "Dilwale Dulhania Le Jayenge"));
@@ -30,10 +34,18 @@ public class MoviesController {
 
     @GetMapping("/{movieId}")
     public Movie getMovieInfo(@PathVariable int movieId) throws InterruptedException {
-        Thread.sleep(3000);
-        MovieSummary movieSummary = restTemplate.getForObject("https://api.themoviedb.org/3/movie/"
+//        Thread.sleep(1000);
+
+        MovieSummary movieSummary = restClient.get()
+                .uri("https://api.themoviedb.org/3/movie/"
+                        + movieId
+                        + "?api_key=cea3b7a0b210db1ea9f3707365849dd8")
+                .retrieve()
+                .body(MovieSummary.class);
+
+        /*MovieSummary movieSummary = restTemplate.getForObject("https://api.themoviedb.org/3/movie/"
                 + movieId
-                + "?api_key=cea3b7a0b210db1ea9f3707365849dd8", MovieSummary.class);
+                + "?api_key=cea3b7a0b210db1ea9f3707365849dd8", MovieSummary.class);*/
         return new Movie(movieId, movieSummary.getTitle(), movieSummary.getOverview());
     }
 }
