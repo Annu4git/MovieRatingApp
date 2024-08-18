@@ -13,7 +13,9 @@ public class AppConfig {
     @Bean
     @LoadBalanced
     public RestTemplate getRestTemplate() {
-        return new RestTemplate();
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setConnectTimeout(3000);
+        return new RestTemplate(clientHttpRequestFactory);
     }
 
     @Bean

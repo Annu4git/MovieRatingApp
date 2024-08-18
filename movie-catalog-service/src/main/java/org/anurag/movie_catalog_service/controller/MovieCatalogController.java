@@ -44,7 +44,6 @@ public class MovieCatalogController {
                 UserRatings.class);
 
         // 2.
-        System.out.println("calling movie info service asynchronously");
 
         return userRatings.getRatings().stream().map(rating -> {
             // Movie movie = restTemplate.getForObject("http://localhost:8082/movies/"
