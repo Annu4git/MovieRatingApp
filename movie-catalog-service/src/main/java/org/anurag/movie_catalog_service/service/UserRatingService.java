@@ -17,17 +17,14 @@ public class UserRatingService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @HystrixCommand(fallbackMethod = "getFallbackUserRating",
-    commandProperties = {
-            /* threshold time */
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
-            /* last 5 request to consider for evaluation */
-            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
-            /* % of failed request */
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
-            /* sleep window, how long circuit breaker will sleep before it come up */
-            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000")
-    })
+    @HystrixCommand(
+            fallbackMethod = "getFallbackUserRating",
+            threadPoolKey = "ratingsDataPool",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "20"),
+                    @HystrixProperty(name = "maxQueueSize", value = "10"),
+            }
+    )
     public UserRatings getUserRatings(String userId) {
         UserRatings userRatings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/" + userId,
                 UserRatings.class);

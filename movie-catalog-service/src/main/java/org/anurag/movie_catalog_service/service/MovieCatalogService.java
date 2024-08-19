@@ -16,17 +16,17 @@ public class MovieCatalogService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @HystrixCommand(fallbackMethod = "getFallbackCatalog",
-    commandProperties = {
-            /* threshold time */
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
-            /* last 5 request to consider for evaluation */
-            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
-            /* % of failed request */
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
-            /* sleep window, how long circuit breaker will sleep before it come up */
-            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000")
-    })
+    @HystrixCommand(
+            fallbackMethod = "getFallbackCatalog",
+            /* pool key refers to thread pool, same pool key means same thread pool */
+            threadPoolKey = "movieInfoPool",
+            threadPoolProperties = {
+                    /* core size = total threads for this pool */
+                    @HystrixProperty(name = "coreSize", value = "20"),
+                    /* queue size = max requests which will be in waiting if thread pool is full */
+                    @HystrixProperty(name = "maxQueueSize", value = "10"),
+            }
+    )
     public CatalogItem getCatalogItem(Rating rating) {
         Movie movie = restTemplate.getForObject("http://movie-info-service/movies/"
                 + rating.getMovieId(), Movie.class);
