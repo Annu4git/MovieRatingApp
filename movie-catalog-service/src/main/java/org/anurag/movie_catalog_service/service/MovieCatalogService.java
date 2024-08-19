@@ -1,23 +1,32 @@
 package org.anurag.movie_catalog_service.service;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.anurag.movie_catalog_service.models.CatalogItem;
 import org.anurag.movie_catalog_service.models.Movie;
 import org.anurag.movie_catalog_service.models.Rating;
-import org.anurag.movie_catalog_service.models.UserRatings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-@EnableCircuitBreaker
 public class MovieCatalogService {
 
     @Autowired
     private RestTemplate restTemplate;
 
-    @HystrixCommand(fallbackMethod = "getFallbackCatalog")
+    @HystrixCommand(fallbackMethod = "getFallbackCatalog",
+    commandProperties = {
+            /* threshold time */
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+            /* last 5 request to consider for evaluation */
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
+            /* % of failed request */
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+            /* sleep window, how long circuit breaker will sleep before it come up */
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000")
+    })
     public CatalogItem getCatalogItem(Rating rating) {
         Movie movie = restTemplate.getForObject("http://movie-info-service/movies/"
                 + rating.getMovieId(), Movie.class);
