@@ -41,7 +41,7 @@ public class GreetingsController {
 
     @GetMapping("/message")
     public String message() {
-        return env.toString();
+        return greetingsMessage;
     }
 }
 

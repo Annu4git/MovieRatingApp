@@ -6,8 +6,7 @@ import org.springframework.context.annotation.Profile;
 
 @ConfigurationProperties(prefix = "db")
 @Configuration
-@Profile("dev")
-public class DBSettings implements IDBSettings {
+public class DBSettings {
     String username;
 
     String password;
