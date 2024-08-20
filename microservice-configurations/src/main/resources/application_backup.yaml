@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: "Microservice Configurations"
+
+server:
+    port: 8086
+
+greetings:
+  message: Hello, welcome Anurag to home page!
+
+# below property is commented out
+# bookname: Sapiens
+
+books: Life of Pie, Sapiens, Wings of Fire
+students: "{1: 'Anurag', 2: 'Viraj'}"
+
+
+db:
+  username: anurag
+  password: pass@1234
+  host: 123.45.67.89
+
+employee:
+  id: 123
+  name: Anurag
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    env:
+      show-values: ALWAYS
+    configprops:
+      show-values: ALWAYS
