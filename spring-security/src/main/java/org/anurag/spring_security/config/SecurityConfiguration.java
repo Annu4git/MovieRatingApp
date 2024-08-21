@@ -24,34 +24,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .withDefaultSchema()
-                .withUser(
-                        User.withUsername("user")
-                                .password("pass1234")
-                                .roles("USER")
-                )
-                .withUser(
-                        User.withUsername("admin")
-                                .password("admin")
-                                .roles("ADMIN")
-                );
+                .dataSource(dataSource);
     }
-
-    /*@Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        // set your configuration here
-        auth.inMemoryAuthentication()
-                .withUser("root")
-                .password("root")
-                .roles("USER")
-                .and()
-                .withUser("admin")
-                .password("test")
-                .roles("ADMIN");
-    }
-    */
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
