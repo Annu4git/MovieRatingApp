@@ -3,6 +3,7 @@ package org.anurag.microservice_configurations.controller;
 import org.anurag.microservice_configurations.config.DBSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/greetings")
+@RefreshScope
 public class GreetingsController {
 
     @Value("${greetings.message}")
