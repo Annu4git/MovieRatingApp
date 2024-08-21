@@ -1,15 +1,18 @@
 -- Spring boot uses this file to create schema
 
-create table users(
-	username varchar_ignorecase(50) not null primary key,
-	password varchar_ignorecase(50) not null,
-	enabled boolean not null
+-- chaning table names, and column names deliberately
+-- we will configure to tell spring security names of our table columns etc
+
+create table users_info (
+	user_name varchar_ignorecase(50) not null primary key,
+	pass varchar_ignorecase(50) not null,
+	active boolean not null
 );
 
-create table authorities (
-	username varchar_ignorecase(50) not null,
-	authority varchar_ignorecase(50) not null,
-	constraint fk_authorities_users foreign key(username) references users(username)
+create table authorities_info (
+	user_name varchar_ignorecase(50) not null,
+	auth varchar_ignorecase(50) not null,
+	constraint fk_authorities_info_users_info foreign key(user_name) references users_info(user_name)
 );
-create unique index ix_auth_username on authorities (username,authority);
+create unique index ix_auth_user_name on authorities_info (user_name, auth);
 
