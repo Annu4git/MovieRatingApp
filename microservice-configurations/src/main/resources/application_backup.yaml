@@ -15,10 +15,10 @@ books: Life of Pie, Sapiens, Wings of Fire
 students: "{1: 'Anurag', 2: 'Viraj'}"
 
 
-db:
-  username: anurag
-  password: pass@1234
-  host: 123.45.67.89
+#db:
+#  username: anurag
+#  password: ************
+#  host: 123.45.67.89
 
 employee:
   id: 123
